@@ -36,6 +36,14 @@
   #define AT_MINSIGSTKSZ 51
 #endif
 
+#ifndef AT_HWCAP3
+  #define AT_HWCAP3 29
+#endif
+
+#ifndef AT_HWCAP4
+    #define AT_HWCAP4 30
+#endif
+
 #ifdef DEBUG
   #define debug(...) fprintf(stderr, __VA_ARGS__)
 #else
@@ -356,6 +364,8 @@ void elf_run(uintptr_t entry_address, char *filename, int argc, char **argv, cha
       case AT_PAGESZ:
       case AT_HWCAP:
       case AT_HWCAP2:
+      case AT_HWCAP3:
+      case AT_HWCAP4:
       case AT_CLKTCK:
       case AT_FLAGS:
       case AT_UID:
