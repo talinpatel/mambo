@@ -72,9 +72,9 @@ static void stop_tracing(void) {
 }
 
 // Called before every application instruction.
-static void trace_instruction(uintptr_t pc) {
+static void trace_instruction(uintptr_t pc, uint32_t insn) {
   if (tracing) {
-    fprintf(trace_file, "0x%" PRIxPTR "\n", pc - load_base);
+    fprintf(trace_file, "%" PRIxPTR " %02x \n", pc - load_base, insn);
   }
 }
 
