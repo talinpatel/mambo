@@ -14,6 +14,9 @@
   Build: make PLUGINS="plugins/main_trace.c" OUTPUT_FILE=mambo_main_trace
   Run:   MAIN_TRACE_OUT=trace.txt ./mambo_main_trace ./program
          (without MAIN_TRACE_OUT, the trace goes to main_trace.txt)
+    
+  note: getting the bytes from pc is unoptimised
+  so is the printing using printf but not worried about this for now
 */
 
 #ifdef PLUGINS_NEW
@@ -72,9 +75,10 @@ static void stop_tracing(void) {
 }
 
 // Called before every application instruction.
-static void trace_instruction(uintptr_t pc, uint32_t insn) {
+static void trace_instruction(uintptr_t pc) {
+  // dereference pc to get the instruction encoding.
   if (tracing) {
-    fprintf(trace_file, "%" PRIxPTR " %02x \n", pc - load_base, insn);
+    fprintf(trace_file, "%" PRIxPTR " %08" PRIx32 "\n", pc - load_base, *(uint32_t *)pc);
   }
 }
 
@@ -163,8 +167,9 @@ static int mt_pre_inst_cb(mambo_context *ctx) {
     emit_call_with_reg(ctx, record_main_address, x0);
     in_start_block = false;
   }
-
-  emit_safe_fcall_static_args(ctx, trace_instruction, 1, pc);
+    
+  // number 1 represents number of arguments passed to trace_instruction
+  emit_safe_fcall_static_args(ctx, trace_instruction, 1 , pc);
   return 0;
 }
 
