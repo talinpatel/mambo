@@ -78,7 +78,7 @@ static void stop_tracing(void) {
 static void trace_instruction(uintptr_t pc) {
   // dereference pc to get the instruction encoding.
   if (tracing) {
-    fprintf(trace_file, "%" PRIxPTR " %08" PRIx32 "\n", pc - load_base, *(uint32_t *)pc);
+    fprintf(trace_file,"%08" PRIx32 "\n", *(uint32_t *)pc);
   }
 }
 
